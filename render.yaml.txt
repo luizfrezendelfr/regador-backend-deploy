@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: regador-backend-luiz # O nome do seu serviço
+    env: python
+    plan: free # Usa o plano gratuito
+    pythonVersion: "3.10" # Uma versão do Python estável e compatível
+    repo: https://github.com/luizfrezendelfr/regador-backend-deploy # O SEU REPOSITÓRIO GITHUB
+    
+    # Instala o GDAL (a biblioteca geoespacial) no sistema do Render ANTES de instalar o pip
+    systemDependencies:
+      - libgdal-dev
+      
+    # Comandos para construir o seu servidor
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      
+    # Comando para iniciar o seu servidor
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    
+    # As suas variáveis de ambiente
+    envVars:
+      - key: MONGO_DETAILS
+        value: "mongodb+srv://luizfrezende:luiz0612@cluster0.bqut6nv.mongodb.net/?appName=Cluster0"
+      - key: PYTHON_VERSION
+        value: "3.10"
