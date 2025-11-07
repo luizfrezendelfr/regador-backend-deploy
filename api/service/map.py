@@ -10,6 +10,7 @@ from api.service.utils import create_shapefile
 
 def retrieve_dates():
     dates = []
+    # A leitura da pasta 'images/' está correta, pois foi carregada para o GitHub
     directory = r'images/'
     for filename in os.listdir(directory):
         if filename.startswith("STA_NDVI_"):
@@ -33,8 +34,15 @@ def calculate_area(coordinates):
 
 
 def calculate_stats_from_area(coordinates, name, date):
-    create_shapefile(coordinates, name)
-    stats = zonal_stats('polygon.shp', f'images/STA_NDVI_{date}.tif')
+    # Caminho do ficheiro temporário
+    shapefile_path = "/tmp/polygon.shp"
+    
+    # Diz à função para criar o ficheiro no caminho /tmp
+    create_shapefile(coordinates, name, shapefile_path)
+    
+    # Lê o ficheiro a partir do caminho /tmp
+    stats = zonal_stats(shapefile_path, f'images/STA_NDVI_{date}.tif')
+    
     return {
         'mean': stats[0]['mean'],
         'min': stats[0]['min'],
